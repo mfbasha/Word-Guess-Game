@@ -12,31 +12,37 @@ masked_word = ["_"  for letter in selected_word]
 print("".join(masked_word))
 remaining_indexes = [i for i in range(len(selected_word))]
 print(remaining_indexes)
-counter = len(selected_word)
+
 
 def get_guess():
+    counter = len(selected_word)
     while len(remaining_indexes) > 0:
-        guess = input("Enter a letter: ")
-        global counter
-        counter -= 1
+        guess = input("Enter a letter or type 'Exit': ")
+        if guess.lower() == "exit":
+            break
         occurance = 0
         while True:
             if len(guess) == 1 and guess.isalpha():
                 break
             else:
                 guess = input("Please enter a single letter: ")
+        
         if guess in selected_word:
-            indx = selected_word.index(guess)
-            if  indx not in remaining_indexes:
-                occurance =indx
-                indx = selected_word.find(guess, occurance + 1)
-                if indx == -1:
-                    continue
-            masked_word[indx] = guess
-            remaining_indexes.remove(indx)
+           occurance = selected_word.count(guess)
+           counter = counter - occurance
+           if occurance > 1:
+            indecies =[i for i, letter in enumerate(selected_word) if letter == guess]
+            for index in indecies:
+                masked_word[index] = guess
+                remaining_indexes.remove(index)
+                
+           else:
+                indx = selected_word.index(guess)
+                masked_word[indx] = guess
+                remaining_indexes.remove(indx)
         print("".join(masked_word))
         print(selected_word)
-        if counter == 0:
+        if counter <= 0:
             print("Game over")
             break
     if "".join(masked_word) == selected_word:
